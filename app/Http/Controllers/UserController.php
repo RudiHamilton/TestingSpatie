@@ -6,12 +6,23 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\support\Facades\Hash;
+use Illuminate\Routing\Controller;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct(){ 
+        // add feature to ensure that admin cannot add or remove permissions if they dont have them.
+        $this->middleware('permission:Create User',options: ['only'=>['create','store']]);
+        $this->middleware('permission:View User',options: ['only'=>['index']]);
+        $this->middleware('permission:Edit User',options: ['only'=>['edit','update',]]);
+        $this->middleware('permission:Delete User',options: ['only'=>['destroy']]);
+
+    }
+
     public function index()
     {
         $users = User::all();
