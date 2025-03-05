@@ -4,12 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
-
+use Illuminate\Routing\Controller;
+/**
+* Class SubscriptionController
+* @package App\Http\Controllers
+*/
 class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    
+    public function __construct(){
+    // add feature to ensure that admin cannot add or remove permissions if they dont have them.
+    $this->middleware('permission:Create Permission',options: ['only'=>['create','store']]);
+    $this->middleware('permission:View Permission',options: ['only'=>['index']]);
+    $this->middleware('permission:Edit Permission',options: ['only'=>['edit','update',]]);
+    $this->middleware('permission:Delete Permission',options: ['only'=>['destroy']]);
+    }
     public function index() 
     {
         $permissions = Permission::all();

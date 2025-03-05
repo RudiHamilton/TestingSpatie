@@ -11,17 +11,21 @@ Route::get('/', function () {
 });
 
 
+Route::group(['middleware'=> ['role:super-admin|admin']], function () {
 
-Route::get('permissions/{permissionid}/delete',[PermissionController::class,'destroy']);
-Route::resource('permissions',PermissionController::class);
+    Route::get('permissions/{permissionid}/delete',[PermissionController::class,'destroy']);
+    Route::resource('permissions',PermissionController::class);
+    
+    Route::get('roles/{roleid}/delete',[RoleController::class,'destroy']);
+    // ->middleware('permission:delete role');
+    Route::resource('roles',RoleController::class);
+    Route::get('roles/{roleid}/addpermission',[RoleController::class,'addPermissionToRole']);
+    Route::put('roles/{roleid}/addpermission',[RoleController::class,'givePermissionToRole']);
+    
+    Route::get('users/{userid}/delete',[UserController::class,'destroy']);
+    Route::resource('users',UserController::class);
+});
 
-Route::get('roles/{roleid}/delete',[RoleController::class,'destroy']);
-Route::resource('roles',RoleController::class);
-Route::get('roles/{roleid}/addpermission',[RoleController::class,'addPermissionToRole']);
-Route::put('roles/{roleid}/addpermission',[RoleController::class,'givePermissionToRole']);
-
-Route::get('users/{userid}/delete',[UserController::class,'destroy']);
-Route::resource('users',UserController::class);
 
 
 

@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
-class RoleController extends Controller
+/**
+* Class SubscriptionController
+* @package App\Http\Controllers
+*/
+class  RoleController extends Controller
 {
+    public function __construct(){
+        // add feature to ensure that admin cannot add or remove permissions if they dont have them.
+        $this->middleware('permission:Create Role',options: ['only'=>['create','store','addPermissionToRole','givePermissionToRole']]);
+        $this->middleware('permission:View Role',options: ['only'=>['index']]);
+        $this->middleware('permission:Update Role',options: ['only'=>['edit','update',]]);
+        $this->middleware('permission:Delete Role',options: ['only'=>['destroy']]);
+    }
+
     public function index() 
     {
         $roles = Role::all();
